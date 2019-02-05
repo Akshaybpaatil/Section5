@@ -1,0 +1,245 @@
+public abstract class Account {
+	private long acc_num;
+	private double balance;
+	private Person person;
+	
+	Account(long acc_num,double balance,Person person){
+		this.acc_num=acc_num;
+		this.balance=balance;	
+		this.person=person;
+	}
+	
+	public Person getPerson() {
+		return person;
+	}
+	public double getBalance() {
+		return balance;
+		
+	}
+
+	public long getAcc_num() {
+		return acc_num;
+	}
+	
+	public abstract void deposit(double amount) throws InvalidAmount;
+	
+	public abstract void withdraw(double amount) throws InvalidAmount;
+	
+}
+
+
+import com.java41.InvalidAmount;
+import com.java41.Person;
+
+public class CurrentAccount extends Account {
+	CurrentAccount(long acc_num, double balance, Person person) {
+		super(acc_num,balance, person);
+		// TODO Auto-generated constructor stub
+	}
+	private double balance;
+
+	/*CurrentAccount(long acc_num, String name,double balance) {
+		
+		this.balance=balance;
+		
+	}*/
+
+	@Override
+	public void deposit(double amount)throws InvalidAmount {
+		if(amount<0) {
+			throw new InvalidAmount("invalid amount");
+		}else
+			balance=balance+amount;	
+		   System.out.println("balance in account "+balance);
+		   
+	}
+
+	@Override
+	public void withdraw(double amount)throws InvalidAmount {
+		
+		if(amount<0) {
+			throw new InvalidAmount("invalid amount");
+		}else if((balance-amount)<10000) {
+			System.out.println("minimum balancemust be 10000");
+		}else {
+			balance=balance-amount;	
+			System.out.println(" withdrawn balance in account "+balance);
+		}
+		
+	}
+	@Override
+	public double getBalance() {
+		// TODO Auto-generated method stub
+		return balance;
+	}
+	
+
+}
+
+import com.java41.InvalidAmount;
+import com.java41.Person;
+
+public class SavingsAccount extends Account {
+
+SavingsAccount(long acc_num, double balance, Person person) {
+		super(acc_num,balance, person);
+		// TODO Auto-generated constructor stub
+	}
+private double balance;
+	
+	
+	/*SavingsAccount(long acc_num,String name,double balance){
+		super(acc_num,name);
+		this.balance=balance;
+	}*/
+	public double getBalance() {
+		return balance;
+	}
+	@Override
+	public void deposit(double amount) throws InvalidAmount {
+		if(amount<0) {
+			throw new InvalidAmount("invalid amount");
+		}else
+			balance=balance+amount;	
+		System.out.println("balance in account "+balance);
+		
+	}
+	@Override
+	public void withdraw(double amount)throws InvalidAmount {
+		if(amount<0) {
+			throw new InvalidAmount("invalid amount");
+		}else if((balance-amount)<1000) {
+			System.out.println("minimum balancemust be 1000");
+		}else {
+			balance=balance-amount;	
+			System.out.println(" withdrawn balance in account "+balance);
+		}
+		
+	}
+}
+
+public class Person {
+	
+	String name;
+	float age;
+	
+	public Person(String name, float age) {
+		this.name = name;
+		this.age = age;
+	}
+	public String getName() {
+		return name;
+	}
+	public float getAge() {
+		return age;
+	}
+	
+	@Override
+	public String toString() {
+		return "Person [name=" + name + ", age=" + age + "]";
+	}
+	
+	
+	
+
+}
+
+import java.util.Random;
+
+public class BankApp {
+	
+	public static void main(String[]args) {
+		
+	Random r = new Random();
+try {
+	Account account1 = new CurrentAccount(r.nextInt(100000),2000, new Person("Smith", 32));
+
+	Account account2 = new SavingsAccount(r.nextInt(100000), 5000, new Person("Kathy", 32));
+     account1.deposit(3000);
+     account2.deposit(6000);
+     account2.deposit(2000);
+     System.out.println(account1.getBalance());
+     System.out.println(account2.getBalance());
+}catch(InvalidAmount e) {
+	System.out.println(e.getMessage());
+}
+
+	}
+
+}
+
+public class InvalidAmount extends RuntimeException {
+	String str;
+	public InvalidAmount(String str){
+		super(str);
+		this.str=str;
+	}
+  
+
+}
+**********************************************************************
+Scanner scanner = new Scanner(System.in);
+	HashMap<Integer, Employee> employees = new HashMap<>();
+	EmployeeService employeeService ;
+	@Override
+	public void getEmployeeDetails() {
+		
+		Set s = employees.entrySet();
+		Iterator iterator = s.iterator();
+		while(iterator.hasNext()){
+			System.out.println(iterator.next().toString());
+		}
+		
+	}
+
+public String getInsurenceDetails(Employee e) {
+		if((e.getSalary()>5000 && e.getSalary()<20000 )|| e.getDesignation().equalsIgnoreCase("system associate")){
+			return "Scheme C";
+		}else if((e.getSalary()>=20000 && e.getSalary()<40000) || e.getDesignation().equalsIgnoreCase("programmer")){
+			return "Scheme B";
+		}else if(e.getSalary()>=40000 || e.getDesignation().equalsIgnoreCase("manager")){
+			return "Scheme A";
+		}else if(e.getSalary()<5000 || e.getDesignation().equalsIgnoreCase("clerk")){
+			return "No Scheme";
+		}else{
+			System.out.println("invalid");
+			return null;
+		}
+		
+	}
+
+public HashMap<Integer, Employee> addEmployee() {
+		int n = 1;	
+		
+		do{
+		System.out.println("Enter employee detais");
+		System.out.println("Enter employee id");
+		int id = scanner.nextInt();
+		System.out.println("Enter employee name");
+		String name = scanner.next();
+		System.out.println("Enter employee salary");
+		double salary = scanner.nextDouble();
+		System.out.println("Enter employee designation");
+		String designation = scanner.next();
+		Employee employee = new Employee(id, name, salary, designation);
+
+		employeeService = getEmployeeService();
+		
+		//employeeService.getEmployeeDetails(employee);
+		employee.setInsurenceScheme(employeeService.getInsurenceDetails(employee));
+		System.out.println("Insurence Scheme is " + employee.getInsurenceScheme());
+		employees.put(id, employee);
+		System.out.println("do you want to continue 1/0");
+		
+		n = scanner.nextInt();
+		
+		}while(n==1);
+	return employees;
+	}
+	public EmployeeService getEmployeeService() {
+		if(employeeService==null){
+			employeeService =new EmployeeServiceImpl();
+		}
+		return employeeService;
+	}
+************************************************************************
